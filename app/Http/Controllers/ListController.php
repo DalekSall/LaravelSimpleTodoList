@@ -20,8 +20,10 @@ class ListController extends Controller
 
     function create(Request $request) {
         $list = new ItemList;
-        $list-> name = $request->input('name');
-        $list->save();
+        $list->name = $request->input('name');
+        if(!empty($list->name)) {
+            $list->save();
+        }
         return redirect()->action('ListController@index');
     }
 
@@ -30,14 +32,18 @@ class ListController extends Controller
         $item->name = $request->input('name');
         $item->item_list_id = $id;
         $item->active = 1;
-        $item->save();
+        if(!empty($item->name) && !empty($id)) {
+            $item->save();
+        }
         return redirect()->action('ListController@get', $id);
     }
 
     function checkItem($listId, $itemId) {
         $item = Item::find($itemId);
-        $item->active = 0;
-        $item->save();
+        if(!empty($item)) {
+            $item->active = 0;
+            $item->save();
+        }
 
         return redirect()->action('ListController@get', $listId);
     }
